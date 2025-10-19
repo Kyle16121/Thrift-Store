@@ -16,10 +16,10 @@ class AddItemPage extends StatefulWidget {
 }
 
 class AddItemPageState extends State<AddItemPage> {
-  final _nameCtrl    = TextEditingController();
-  final _titleCtrl   = TextEditingController();
-  final _descCtrl    = TextEditingController();
-  final _priceCtrl   = TextEditingController();
+  final _nameCtrl = TextEditingController();
+  final _titleCtrl = TextEditingController();
+  final _descCtrl = TextEditingController();
+  final _priceCtrl = TextEditingController();
   final _contactCtrl = TextEditingController();
   File? _image;
   final picker = ImagePicker();
@@ -43,12 +43,12 @@ class AddItemPageState extends State<AddItemPage> {
     final svc = Provider.of<SupabaseService>(context, listen: false);
 
     await svc.addItem(
-      title:        _titleCtrl.text.trim(),
-      desc:         _descCtrl.text.trim(),
-      price:        double.tryParse(_priceCtrl.text) ?? 0,
-      contact:      _contactCtrl.text.trim(),
+      title: _titleCtrl.text.trim(),
+      desc: _descCtrl.text.trim(),
+      price: double.tryParse(_priceCtrl.text) ?? 0,
+      contact: _contactCtrl.text.trim(),
       uploaderName: _nameCtrl.text.trim(),
-      image:        _image!,
+      image: _image!,
     );
 
     setState(() => _uploading = false);
@@ -68,7 +68,10 @@ class AddItemPageState extends State<AddItemPage> {
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
-          colors: [Color(0xFF7209B7), Color(0xFFFF006E)],
+          colors: [
+            Color(0xFFFFDEE9), // soft pink
+            Color(0xFFB5FFFC), // pale aqua
+          ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -77,18 +80,20 @@ class AddItemPageState extends State<AddItemPage> {
         backgroundColor: Colors.transparent,
         extendBodyBehindAppBar: true,
         extendBody: true,
-
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
           title: Text(
             '✨ Add Your Thrift',
             style: GoogleFonts.poppins(
-                fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF5A189A),
+            ),
           ),
           centerTitle: true,
+          iconTheme: const IconThemeData(color: Color(0xFF5A189A)),
         ),
-
         body: SafeArea(
           bottom: false,
           child: SingleChildScrollView(
@@ -116,7 +121,7 @@ class AddItemPageState extends State<AddItemPage> {
                 // Price
                 CustomInputField(
                   controller: _priceCtrl,
-                  label: 'Price (Php)',
+                  label: 'Price (₱)',
                   icon: Icons.attach_money,
                   keyboardType: TextInputType.number,
                 ),
@@ -144,15 +149,18 @@ class AddItemPageState extends State<AddItemPage> {
                   icon: const Icon(Icons.photo_library, size: 24),
                   label: Text(
                     'Choose Photo',
-                    style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+                    style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.w600,
+                      color: const Color(0xFF5A189A),
+                    ),
                   ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white.withOpacity(0.9),
-                    foregroundColor: Colors.deepPurple,
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
+                    elevation: 4,
                   ),
                   onPressed: pickImage,
                 )
@@ -160,44 +168,55 @@ class AddItemPageState extends State<AddItemPage> {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(12),
-                      child: Image.file(_image!, height: 180, fit: BoxFit.cover),
+                      child: Image.file(
+                        _image!,
+                        height: 180,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                     const SizedBox(height: 8),
                     TextButton(
                       onPressed: () => setState(() => _image = null),
                       child: Text(
                         'Re-pick Image',
-                        style: GoogleFonts.poppins(color: Colors.white70),
+                        style: GoogleFonts.poppins(
+                          color: const Color(0xFF7B2CBF),
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                   ],
                 ),
-
                 const SizedBox(height: 24),
 
                 // Upload button
                 ElevatedButton(
                   onPressed: canUpload ? _handleUpload : null,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.deepPurple,
+                    backgroundColor: const Color(0xFFB5179E),
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14),
                     ),
                     elevation: 6,
+                    disabledBackgroundColor: Colors.purple.shade200,
                   ),
                   child: _uploading
                       ? const SizedBox(
                     width: 24,
                     height: 24,
-                    child: CircularProgressIndicator(strokeWidth: 2),
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      valueColor:
+                      AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
                   )
                       : Text(
                     'Upload Item',
                     style: GoogleFonts.poppins(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
                   ),
                 ),

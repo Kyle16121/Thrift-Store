@@ -22,9 +22,12 @@ class ItemDetailPage extends StatelessWidget {
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFFF72585), Color(0xFF3A0CA3)],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFFFFDEE9), // soft pink
+              Color(0xFFB5FFFC), // pale aqua
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
         ),
         child: SafeArea(
@@ -33,7 +36,7 @@ class ItemDetailPage extends StatelessWidget {
             builder: (context, snap) {
               if (snap.connectionState != ConnectionState.done) {
                 return const Center(
-                  child: CircularProgressIndicator(color: Colors.white),
+                  child: CircularProgressIndicator(color: Color(0xFF7B2CBF)),
                 );
               }
               if (snap.hasError) {
@@ -49,7 +52,7 @@ class ItemDetailPage extends StatelessWidget {
                 return Center(
                   child: Text(
                     'Item not found 🤷',
-                    style: GoogleFonts.poppins(color: Colors.white),
+                    style: GoogleFonts.poppins(color: Colors.black54),
                   ),
                 );
               }
@@ -64,8 +67,8 @@ class ItemDetailPage extends StatelessWidget {
                         children: [
                           GestureDetector(
                             onTap: () => Navigator.pop(context),
-                            child:
-                            const Icon(Icons.arrow_back_ios, color: Colors.white),
+                            child: const Icon(Icons.arrow_back_ios,
+                                color: Color(0xFF5A189A)),
                           ),
                           const SizedBox(width: 8),
                           Text(
@@ -73,20 +76,20 @@ class ItemDetailPage extends StatelessWidget {
                             style: GoogleFonts.poppins(
                               fontSize: 22,
                               fontWeight: FontWeight.w600,
-                              color: Colors.white,
+                              color: const Color(0xFF5A189A),
                             ),
                           ),
                         ],
                       ),
                       const SizedBox(height: 16),
 
-                      // Tappable image with Hero
+                      // Image
                       GestureDetector(
                         onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) =>
-                                FullScreenImagePage(itemId: item.id, imageUrl: item.imageUrl),
+                            builder: (_) => FullScreenImagePage(
+                                itemId: item.id, imageUrl: item.imageUrl),
                           ),
                         ),
                         child: Hero(
@@ -96,9 +99,9 @@ class ItemDetailPage extends StatelessWidget {
                               borderRadius: BorderRadius.circular(20),
                               boxShadow: const [
                                 BoxShadow(
-                                  color: Colors.black38,
-                                  blurRadius: 12,
-                                  offset: Offset(0, 6),
+                                  color: Colors.black26,
+                                  blurRadius: 10,
+                                  offset: Offset(0, 5),
                                 ),
                               ],
                             ),
@@ -120,7 +123,7 @@ class ItemDetailPage extends StatelessWidget {
                         style: GoogleFonts.poppins(
                           fontSize: 26,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: const Color(0xFF3C096C),
                         ),
                       ),
                       const SizedBox(height: 8),
@@ -128,17 +131,17 @@ class ItemDetailPage extends StatelessWidget {
                         '₱ ${item.price.toStringAsFixed(2)}',
                         style: GoogleFonts.poppins(
                           fontSize: 22,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.yellowAccent,
+                          fontWeight: FontWeight.w600,
+                          color: const Color(0xFFD100D1),
                         ),
                       ),
                       const SizedBox(height: 24),
 
-                      // Description
+                      // Description card
                       Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.9),
+                          color: Colors.white.withOpacity(0.85),
                           borderRadius: BorderRadius.circular(16),
                         ),
                         child: Column(
@@ -149,13 +152,16 @@ class ItemDetailPage extends StatelessWidget {
                               style: GoogleFonts.poppins(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w600,
-                                color: Colors.deepPurple,
+                                color: const Color(0xFF5A189A),
                               ),
                             ),
                             const SizedBox(height: 8),
                             Text(
                               item.description,
-                              style: GoogleFonts.poppins(fontSize: 14),
+                              style: GoogleFonts.poppins(
+                                fontSize: 14,
+                                color: Colors.black87,
+                              ),
                             ),
                           ],
                         ),
@@ -171,11 +177,14 @@ class ItemDetailPage extends StatelessWidget {
                             children: [
                               InfoChip(icon: Icons.person, text: item.uploadedBy),
                               const SizedBox(width: 8),
-                              InfoChip(icon: Icons.contact_mail, text: item.contactInfo),
+                              InfoChip(
+                                  icon: Icons.contact_mail,
+                                  text: item.contactInfo),
                               const SizedBox(width: 8),
                               InfoChip(
                                 icon: Icons.calendar_today,
-                                text: '${item.createdAt.month}/${item.createdAt.day}/${item.createdAt.year}',
+                                text:
+                                '${item.createdAt.month}/${item.createdAt.day}/${item.createdAt.year}',
                               ),
                             ],
                           ),
@@ -184,23 +193,24 @@ class ItemDetailPage extends StatelessWidget {
                     ],
                   ),
 
-                  // Contact Owner button
+                  // Contact button
                   Positioned(
                     bottom: 16,
                     left: 16,
                     right: 16,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.yellowAccent,
+                        backgroundColor: const Color(0xFFB5179E),
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(14),
                         ),
+                        elevation: 6,
                       ),
                       onPressed: () async {
                         final email = snap.data!.contactInfo.trim();
-                        final subject =
-                        Uri.encodeComponent('Inquiry about "${item.title}"');
+                        final subject = Uri.encodeComponent(
+                            'Inquiry about "${item.title}"');
                         final uri = Uri.parse('mailto:$email?subject=$subject');
                         try {
                           await launchUrl(uri,
@@ -229,7 +239,7 @@ class ItemDetailPage extends StatelessWidget {
                         style: GoogleFonts.poppins(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: Colors.deepPurple,
+                          color: Colors.white,
                         ),
                       ),
                     ),

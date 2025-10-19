@@ -1,9 +1,6 @@
-// lib/pages/sign_in_page.dart
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import '../../services/supabase_service.dart';
 
 class SignInPage extends StatefulWidget {
@@ -20,27 +17,28 @@ class _SignInPageState extends State<SignInPage> {
   @override
   Widget build(BuildContext context) {
     final svc = Provider.of<SupabaseService>(context);
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFF012A3A), // dark blue background
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 32),
+            padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Gradient Header
+                // Header Gradient Bar
                 Container(
-                  padding: const EdgeInsets.symmetric(vertical: 20),
                   width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 22),
                   decoration: const BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        Color(0xFFF72585), // vibrant pink
-                        Color(0xFF3A0CA3), // deep purple
+                        Color(0xFF3CBEC9), // light aqua
+                        Color(0xFF0A7377), // darker teal
                       ],
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
                     ),
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(16),
@@ -48,115 +46,146 @@ class _SignInPageState extends State<SignInPage> {
                     ),
                   ),
                   child: Text(
-                    '🛍️ Thrift Store',
+                    'Mancilla Store',
                     textAlign: TextAlign.center,
-                    style: GoogleFonts.montserrat(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
+                    style: GoogleFonts.poppins(
                       color: Colors.white,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 24),
-                Card(
-                  margin: EdgeInsets.zero,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  elevation: 4,
-                  child: Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: Column(
-                      children: [
-                        TextField(
-                          controller: _emailCtrl,
-                          decoration: InputDecoration(
-                            prefixIcon: const Icon(Icons.email, color: Color(0xFF3A0CA3)),
-                            labelText: 'Email',
-                            labelStyle: GoogleFonts.montserrat(color: Colors.grey[600]),
-                            filled: true,
-                            fillColor: Colors.grey[100],
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide.none,
-                            ),
-                          ),
-                          keyboardType: TextInputType.emailAddress,
-                        ),
-                        const SizedBox(height: 16),
-                        TextField(
-                          controller: _passCtrl,
-                          decoration: InputDecoration(
-                            prefixIcon: const Icon(Icons.lock, color: Color(0xFF3A0CA3)),
-                            labelText: 'Password',
-                            labelStyle: GoogleFonts.montserrat(color: Colors.grey[600]),
-                            filled: true,
-                            fillColor: Colors.grey[100],
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide.none,
-                            ),
-                          ),
-                          obscureText: true,
-                        ),
-                        const SizedBox(height: 24),
-                        SizedBox(
-                          width: double.infinity,
-                          height: 50,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFFF72585),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              elevation: 3,
-                            ),
-                            onPressed: _loading
-                                ? null
-                                : () async {
-                              setState(() => _loading = true);
-                              await svc.signIn(
-                                _emailCtrl.text.trim(),
-                                _passCtrl.text.trim(),
-                              );
-                              setState(() => _loading = false);
-                              if (svc.error == null) {
-                                Navigator.pushReplacementNamed(context, '/items');
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(svc.error!),
-                                    backgroundColor: Colors.redAccent,
-                                  ),
-                                );
-                              }
-                            },
-                            child: _loading
-                                ? const CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation(Colors.white),
-                            )
-                                : Text(
-                              'Sign In',
-                              style: GoogleFonts.montserrat(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        TextButton(
-                          onPressed: () => Navigator.pushNamed(context, '/signup'),
-                          child: Text(
-                            'Don’t have an account? Sign Up',
-                            style: GoogleFonts.montserrat(
-                              color: const Color(0xFF3A0CA3),
-                            ),
-                          ),
+                      fontSize: 28,
+                      fontWeight: FontWeight.w600,
+                      shadows: [
+                        Shadow(
+                          blurRadius: 4,
+                          color: Colors.black.withOpacity(0.3),
+                          offset: const Offset(1, 2),
                         ),
                       ],
                     ),
+                  ),
+                ),
+
+                // Form container
+                Container(
+                  width: double.infinity,
+                  padding:
+                  const EdgeInsets.symmetric(vertical: 30, horizontal: 25),
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(16),
+                      bottomRight: Radius.circular(16),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 8,
+                        offset: Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      // Email Field
+                      TextField(
+                        controller: _emailCtrl,
+                        decoration: InputDecoration(
+                          prefixIcon:
+                          const Icon(Icons.email, color: Color(0xFF0A7377)),
+                          hintText: 'Email',
+                          hintStyle:
+                          GoogleFonts.poppins(color: Colors.grey[600]),
+                          filled: true,
+                          fillColor: const Color(0xFFF4FAFA),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+
+                      // Password Field
+                      TextField(
+                        controller: _passCtrl,
+                        obscureText: true,
+                        decoration: InputDecoration(
+                          prefixIcon:
+                          const Icon(Icons.lock, color: Color(0xFF0A7377)),
+                          hintText: 'Password',
+                          hintStyle:
+                          GoogleFonts.poppins(color: Colors.grey[600]),
+                          filled: true,
+                          fillColor: const Color(0xFFF4FAFA),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 25),
+
+                      // Sign In Button
+                      SizedBox(
+                        width: double.infinity,
+                        height: 48,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF0A7377),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          onPressed: _loading
+                              ? null
+                              : () async {
+                            setState(() => _loading = true);
+                            await svc.signIn(
+                              _emailCtrl.text.trim(),
+                              _passCtrl.text.trim(),
+                            );
+                            setState(() => _loading = false);
+
+                            if (svc.error == null) {
+                              Navigator.pushReplacementNamed(
+                                  context, '/items');
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(svc.error!),
+                                  backgroundColor: Colors.redAccent,
+                                ),
+                              );
+                            }
+                          },
+                          child: _loading
+                              ? const CircularProgressIndicator(
+                            valueColor:
+                            AlwaysStoppedAnimation(Colors.white),
+                          )
+                              : Text(
+                            'Sign In',
+                            style: GoogleFonts.poppins(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+
+                      // Sign Up link
+                      TextButton(
+                        onPressed: () =>
+                            Navigator.pushNamed(context, '/signup'),
+                        child: Text(
+                          "Don't have an account? Sign Up",
+                          style: GoogleFonts.poppins(
+                            color: Colors.grey[600],
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
